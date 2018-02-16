@@ -1,0 +1,156 @@
+---
+title: "Untitled"
+author: "Ursula Neumann"
+date: "February 15, 2018"
+output: html_document
+---
+
+```{r}
+# Load the necessary libraries
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("gridExtra")
+
+# Load the BMI dataset 
+df1 <- read.csv('female_BMI.csv', check.names = FALSE)
+head(df1)
+
+# Gather the data into columns of country, year, and BMI
+df_BMI <- gather(df1, key = "year", value = "BMI", 2:dim(df1)[2])
+head(df_BMI)
+
+# Load the cholesterol dataset
+df2 <- read.csv('female_cholesterol.csv', check.names = FALSE)
+head(df2)
+
+# Gather the data into columns of country, year, and cholesterol
+df_chol <- gather(df2, key = "year", value = "cholesterol", 2:dim(df2)[2])
+colnames(df_chol)[1] <- "Country"
+head(df_chol)
+
+# Join the two datasets using an inner join on country and year
+df <- inner_join(df_BMI, df_chol, by = c("Country", "year"))
+head(df)
+
+# Change the year variable to a numeric class
+df$year <- as.numeric(df$year)
+```
+
+```{r}
+# View summaries of BMI and cholesterol
+summary(df$BMI)
+summary(df$cholesterol)
+```
+
+```{r}
+# Plot BMI and cholesterol over time
+p1 <- ggplot(aes(x = year, 
+           y = BMI), 
+       data = df) + 
+  geom_point(alpha = 1/10) +
+  scale_x_continuous(breaks = seq(1980, 2010, 5)) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  labs(x = expression(paste("Year")),
+       y = expression(paste("BMI (kg/m"^2, ")")))
+
+p2 <- ggplot(aes(x = year, 
+           y = cholesterol), 
+       data = df) + 
+  geom_point(alpha = 1/10) +
+  scale_x_continuous(breaks = seq(1980, 2010, 5)) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  labs(x = expression(paste("Year")),
+       y = expression(paste("Total Cholesterol (mmol/L)")))
+
+grid.arrange(p1, p2, nrow=1)
+```
+
+
+```{r}
+# For the complete dataset, graph a scatterplot of cholesterol vs BMI
+ggplot(aes(x = BMI, 
+           y = cholesterol), 
+       data = df) + 
+  geom_point(alpha = 1/10) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  labs(x = expression(paste("BMI (kg/m"^2, ")")),
+       y = expression(paste("Total Cholesterol (mmol/L)")))
+```
+
+
+```{r}
+# Group the dataset by year and calculate the mean BMI and cholesterol
+year_groups <- group_by(df, year)
+df_by_year <- summarize(year_groups,
+          mean_BMI = mean(BMI),
+          mean_chol = mean(cholesterol),
+          n = n())
+df_by_year <- arrange(df_by_year, year)
+head(df_by_year)
+```
+
+```{r}
+# Graph a scatterplot of mean cholesterol vs mean BMI on the data grouped by year
+ggplot(aes(x = mean_BMI, 
+           y = mean_chol), 
+       data = df_by_year) + 
+  geom_point(alpha = 1/10) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  labs(x = expression(paste("Mean BMI (kg/m"^2, ")")),
+       y = expression(paste("Mean Total Cholesterol (mmol/L)")))
+```
+
+```{r}
+# Group the dataset by country and calculate the mean BMI and cholesterol
+country_groups <- group_by(df, Country)
+df_by_country <- summarize(country_groups,
+          mean_BMI = mean(BMI),
+          mean_chol = mean(cholesterol),
+          n = n())
+df_by_country <- arrange(df_by_country, Country)
+head(df_by_country)
+```
+
+```{r}
+# Graph a scatterplot of mean cholesterol vs mean BMI on the data grouped by year
+ggplot(aes(x = mean_BMI, 
+           y = mean_chol), 
+       data = df_by_country) + 
+  geom_point(alpha = 1/10) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  labs(x = expression(paste("Mean BMI (kg/m"^2, ")")),
+       y = expression(paste("Mean Total Cholesterol (mmol/L)")))
+```
+
+
+```{r}
+# Graph a scatterplot of cholesterol vs BMI for 1980 and 2008 for all countries 
+p3 <- ggplot(aes(x = BMI, 
+           y = cholesterol), 
+       data = subset(df, df$year == 1980)) + 
+  geom_point(alpha = 1/10) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  xlim(18, 35) +
+  ylim(3.95, 6.3) +
+  ggtitle("1980") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = expression(paste("BMI (kg/m"^2, ")")),
+       y = expression(paste("Total Cholesterol (mmol/L)")))
+
+p4 <- ggplot(aes(x = BMI, 
+           y = cholesterol), 
+       data = subset(df, df$year == 2008)) + 
+  geom_point(alpha = 1/10) +
+  geom_smooth(method = 'lm', color = 'magenta') +
+  xlim(18, 35) +
+  ylim(3.95, 6.3) +
+  ggtitle("2008") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  labs(x = expression(paste("BMI (kg/m"^2, ")")),
+       y = expression(paste("Total Cholesterol (mmol/L)")))
+
+grid.arrange(p3, p4, nrow=1)
+```
+
+
