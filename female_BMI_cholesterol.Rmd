@@ -153,4 +153,15 @@ p4 <- ggplot(aes(x = BMI,
 grid.arrange(p3, p4, nrow=1)
 ```
 
+```{r}
+# Calculate Pearson's correlation for 1980 and 2008 data
+cor.test(~ cholesterol + BMI, df, year == 1980)
+cor.test(~ cholesterol + BMI, df, year == 2008)
+```
+
+
+
+
+
+
 
