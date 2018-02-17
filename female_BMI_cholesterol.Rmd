@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Gapminder Revisited: Explore Two Variables"
 author: "Ursula Neumann"
 date: "February 15, 2018"
 output: html_document
@@ -159,6 +159,13 @@ cor.test(~ cholesterol + BMI, df, year == 1980)
 cor.test(~ cholesterol + BMI, df, year == 2008)
 ```
 
+## Resources
+
+1) https://rpubs.com/anthonycerna/popdensityandoilconsumption
+2) https://rstudio-pubs-static.s3.amazonaws.com/136237_170402e5f0b54561bf7605bdea98267a.html
+3) https://stackoverflow.com/questions/6081439/changing-column-names-of-a-data-frame
+4) https://stackoverflow.com/questions/40675778/center-plot-title-in-ggplot2
+5) http://grokbase.com/t/r/r-help/083kkxza9c/r-using-subset-in-correlation-analysis
 
 
 
