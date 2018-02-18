@@ -5,6 +5,13 @@ date: "February 15, 2018"
 output: html_document
 ---
 
+## Introduction
+On the Gapminder website I found two datasets, one for female BMI over time ("Body Mass Index (BMI), women, Kg/m2") and the other for total cholesterol levels over time ("Cholesterol (fat) in blood, women, mmol/L").  I thought it would be interesting to see how these parameters change over time and whether the BMI and cholesterol are positively correlated as I would expect.  Both datasets are provided by the MRC-HPA Center for Environment and Health and span the years 1980 - 2008 for 199 countries.
+
+## Load datasets and prepare the dataframe for analysis
+Below I have loaded both of the datasets, transformed them into "tall" datasets using the gather function, then joined the 2 datasets together on country and year to produce a dataframe with the columns: country, year, BMI and cholesterol.
+
+
 ```{r}
 # Load the necessary libraries
 library("tidyr")
@@ -43,6 +50,9 @@ summary(df$BMI)
 summary(df$cholesterol)
 ```
 
+#Plotting BMI and cholesterol over time
+First I wanted to observe how BMI and cholesterol change over the full time span available.  There is a very obvious, steady, and step-wise increse in BMI and decrease in cholesterol over time.  Given modern day's more sedentary lifestyle with easy access to poor food choices I am not surprised to observe an incremental increase in BMI over time.  However, while I expected cholesterol levels either to remain steady or to increase as well, the opposite is observed.  
+
 ```{r}
 # Plot BMI and cholesterol over time
 p1 <- ggplot(aes(x = year, 
@@ -66,6 +76,9 @@ p2 <- ggplot(aes(x = year,
 grid.arrange(p1, p2, nrow=1)
 ```
 
+## Scatterplots of cholesterol vs BMI over the full time available
+
+First I wanted to plot a scatterplot of cholesterol vs BMI over the complete dataset just to see what it would look like.  The results were not what I expected as the graph looked like various "snakes", or a clear trail of points in a row.  Each snake is a country and for most of the countries the 1980 point is at the top left of the row, and as the years go by, the points descend downward and to the right.  This is summarizied in the next figure below where the dataset is grouped by year and the means of both cholesterol and BMI are plotted.  I thought these were very strange looking scatterplots, perhaps because of the incremental changes over time.  Therefore I also grouped the data by country which produced a more typical looking scatterplot showing a positive correlation between cholesterol and BMI.
 
 ```{r}
 # For the complete dataset, graph a scatterplot of cholesterol vs BMI
@@ -77,6 +90,7 @@ ggplot(aes(x = BMI,
   labs(x = expression(paste("BMI (kg/m"^2, ")")),
        y = expression(paste("Total Cholesterol (mmol/L)")))
 ```
+
 
 
 ```{r}
@@ -123,6 +137,9 @@ ggplot(aes(x = mean_BMI,
        y = expression(paste("Mean Total Cholesterol (mmol/L)")))
 ```
 
+## Scatterplots and correlation coefficients of cholesterol vs BMI at specific timepoints
+
+Because both cholesterol and BMI are changing over time I also decided to investigate the correlation between these variables at 2 different timepoints at the beginning and end of the timeframe, 1980 and 2008 respectively.  Similar to the graph above both of these graphs show a moderately strong positive correlation between cholesterol and BMI (0.64 for 1980 and 51 for 2008).  The graphs were purposely plotted with the same scale for both the x- and y-axis.  Although this leads to more blank space on the plot, you can observe that BMI is increasing over time while cholesterol is decreasing.
 
 ```{r}
 # Graph a scatterplot of cholesterol vs BMI for 1980 and 2008 for all countries 
