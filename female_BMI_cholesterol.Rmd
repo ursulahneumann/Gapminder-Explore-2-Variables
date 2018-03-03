@@ -139,7 +139,7 @@ ggplot(aes(x = mean_BMI,
 
 ## Scatterplots and correlation coefficients of cholesterol vs BMI at specific timepoints
 
-Because both cholesterol and BMI are changing over time I also decided to investigate the correlation between these variables at 2 different timepoints at the beginning and end of the timeframe, 1980 and 2008 respectively.  Similar to the graph above both of these graphs show a moderately strong positive correlation between cholesterol and BMI (0.64 for 1980 and 51 for 2008).  The graphs were purposely plotted with the same scale for both the x- and y-axis.  Although this leads to more blank space on the plot, you can observe that BMI is increasing over time while cholesterol is decreasing.
+Because both cholesterol and BMI are changing over time I also decided to investigate the correlation between these variables at 2 different timepoints at the beginning and end of the timeframe, 1980 and 2008 respectively.  Similar to the graph above both of these graphs show a moderately strong positive correlation between cholesterol and BMI (0.64 for 1980 and 0.51 for 2008).  The graphs were purposely plotted with the same scale for both the x- and y-axis.  Although this leads to more blank space on the plot, you can observe that BMI is increasing over time while cholesterol is decreasing.
 
 ```{r}
 # Graph a scatterplot of cholesterol vs BMI for 1980 and 2008 for all countries 
